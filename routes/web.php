@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::resource('/alumnos', 'StudentsController');
+Route::resource('/profesores', 'TeachersController');

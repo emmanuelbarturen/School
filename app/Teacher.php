@@ -11,5 +11,5 @@ class Teacher extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'phone'];
+    protected $fillable = ['names', 'phone'];
 }
