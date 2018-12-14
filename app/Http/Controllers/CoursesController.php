@@ -56,7 +56,12 @@ class CoursesController extends Controller
      */
     public function show($id)
     {
-        //
+        $course = Course::find($id);
+        if (!$course) {
+            abort(404);
+        }
+
+        return view('courses.show', compact('course'));
     }
 
     /**
@@ -67,19 +72,35 @@ class CoursesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $course = Course::find($id);
+        if (!$course) {
+            abort(404);
+        }
+        return view('courses.edit', compact('course'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param CourseRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CourseRequest $request, $id)
     {
-        //
+        $course = Course::find($id);
+        if (!$course) {
+            abort(404);
+        }
+        $course->fill($request->except(['_token', '_method']));
+        $updated = $course->save();
+        if ($updated) {
+            flash(trans('flash.updated_success'))->success();
+        } else {
+            flash(trans('flash.updated_fail'))->error();
+        }
+
+        return redirect()->route('cursos.show', $course);
     }
 
     /**

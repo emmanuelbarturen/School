@@ -6,13 +6,13 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-md-6"><h3>Detalle del profesor</h3></div>
+                            <div class="col-md-6"><h3>Detalle del curso</h3></div>
                             <div class="col-md-6">
-                                <form action="{{ route('profesores.destroy',$teacher) }}" method="POST"
-                                      onsubmit="return confirm('Seguro que desea eliminar a este profesor?')">
+                                <form action="{{ route('cursos.destroy',$course) }}" method="POST"
+                                      onsubmit="return confirm('Seguro que desea eliminar este curso?')">
                                     {{ method_field('DELETE') }}
                                     @csrf
-                                    <button type="submit" class="btn btn-danger float-right" dusk="delete-teacher">
+                                    <button type="submit" class="btn btn-danger float-right" dusk="delete-course">
                                         Eliminar
                                     </button>
                                 </form>
@@ -21,10 +21,10 @@
 
                     </div>
                     <div class="card-body">
-                        <p>Nombres:{{$teacher->names}} </p>
-                        <p>Teléfono: {{$teacher->phone}}</p>
-                        <a href="{{ route('profesores.edit',$teacher) }}" class="btn btn-primary">Editar</a>
-                        <a href="{{ route('profesores.index') }}" class="btn btn-secondary">Volver</a>
+                        <p>Nombres:{{$course->name}} </p>
+                        <p>Semestre al que pertenece: {{$course->semester}}</p>
+                        <a href="{{ route('cursos.edit',$course) }}" class="btn btn-primary">Editar</a>
+                        <a href="{{ route('cursos.index') }}" class="btn btn-secondary">Volver</a>
                     </div>
                 </div>
             </div>

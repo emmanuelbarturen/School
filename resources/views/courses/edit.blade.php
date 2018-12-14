@@ -4,15 +4,15 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Editar profesor</div>
+                    <div class="card-header">Editar curso</div>
                     <div class="card-body">
-                        <form action="{{ route('profesores.update',$teacher) }}" method="POST">
+                        <form action="{{ route('cursos.update',$course) }}" method="POST">
                             {{ method_field('PUT') }}
                             @csrf
-                            @include('teachers.form',['teacher'=>$teacher])
+                            @include('courses.form',['course'=>$course])
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary" dusk="update-teacher">Guardar</button>
-                                <a href="{{ route('profesores.index')}}" class="btn btn-secondary">Volver</a>
+                                <a href="{{ route('cursos.index')}}" class="btn btn-secondary">Volver</a>
                             </div><!-- /form-group -->
                         </form>
                     </div>
