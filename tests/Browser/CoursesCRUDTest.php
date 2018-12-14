@@ -68,4 +68,23 @@ class CoursesCRUDTest extends DuskTestCase
 
         $this->assertDatabaseHas('courses', ['name' => 'Personal Social', 'semester' => '8']);
     }
+
+    /**
+     * @test
+     * @throws \Throwable
+     */
+    public function delete_course()
+    {
+        $course = factory(Course::class)->create();
+        $this->browse(function (Browser $browser) use ($course) {
+            $browser->visit('/cursos/' . $course->id)
+                ->assertSee('Detalle del curso')
+                ->click('@delete-course')
+                ->driver->switchTo()->alert()->accept();
+            $browser->assertPathIs('/cursos')
+                ->assertSee('Se ha eliminado el registro');
+        });
+
+        $this->assertDatabaseMissing('courses', ['name' => $course->names, 'semester' => $course->phone]);
+    }
 }

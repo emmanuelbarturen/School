@@ -111,6 +111,17 @@ class CoursesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $course = Course::find($id);
+        if (!$course) {
+            abort(404);
+        }
+        $deleted = $course->delete();
+        if ($deleted) {
+            flash(trans('flash.delete_success'))->success();
+        } else {
+            flash(trans('flash.delete_fail'))->error();
+        }
+
+        return redirect()->route('cursos.index');
     }
 }
