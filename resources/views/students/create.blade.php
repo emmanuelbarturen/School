@@ -9,6 +9,7 @@
                         <form action="{{ url('/alumnos') }}" method="POST">
                             @csrf
                             @include('students.form',['student'=>new \App\Student()])
+                            <button type="submit" class="btn btn-primary" dusk="save-student">Guardar</button>
                         </form>
                     </div>
                 </div>

@@ -2,7 +2,6 @@
 
 use App\Http\Requests\StudentRequest;
 use App\Student;
-use Illuminate\Http\Request;
 
 /**
  * Class StudentsController
@@ -17,7 +16,8 @@ class StudentsController extends Controller
      */
     public function index()
     {
-        return view('students.index');
+        $students = Student::all();
+        return view('students.index', compact('students'));
     }
 
     /**
@@ -55,30 +55,48 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
-        //
+        $student = Student::find($id);
+        if (!$student) {
+            abort(404);
+        }
+
+        return view('students.show', compact('student'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param Student $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id)
     {
-        //
+        $student = Student::find($id);
+        if (!$student) {
+            abort(404);
+        }
+        return view('students.edit', compact('student'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param StudentRequest $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(StudentRequest $request, $id)
     {
-        //
+        $student = Student::find($id);
+        $student->fill($request->except(['_token', '_method']));
+        $updated = $student->save();
+        if ($updated) {
+            flash('Se ha actualizado los datos de un alumno')->success();
+        } else {
+            flash('No se ha podido actualizar los datos del alumno')->error();
+        }
+
+        return redirect()->route('alumnos.show', $student);
     }
 
     /**

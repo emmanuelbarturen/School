@@ -20,8 +20,5 @@
                 <small class="text-danger">{{ $errors->first('email') }}</small>
             @endif
         </div><!-- /form-group -->
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary" dusk="save-student">Guardar</button>
-        </div><!-- /form-group -->
     </div>
 </div>

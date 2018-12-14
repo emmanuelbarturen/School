@@ -12,6 +12,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class StudentCRUDTest extends DuskTestCase
 {
     use DatabaseMigrations;
+
     /**
      * A Dusk test example.
      *
@@ -34,34 +35,35 @@ class StudentCRUDTest extends DuskTestCase
     }
 
     /**
-     *
+     * @test
      * @throws \Throwable
      */
     public function read_student()
     {
-        $students = Student::all();
-        $this->browse(function (Browser $browser) use ($students) {
-            $browser->visit('/')
-                ->assertSee('Alumnos')
-                ->click('Alumnos')
-                ->assertSee('Todos los alumnos')
-                ->type('@student-name', 'Juan')
-                ->type('@student-email', 'juan@school.com')
-                ->click('@save-student')
-                ->assertSee('Se ha guardado a un nuevo alumno');
-            foreach ($students as $student) {
-                $browser->assertSee($student->name);
-            }
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/alumnos')
+                ->assertSee('Todos los alumnos');
         });
     }
 
     /**
-     *
+     * @test
      * @throws \Throwable
      */
     public function update_student()
     {
+        $student = factory(Student::class)->create();
+        $this->browse(function (Browser $browser) use ($student) {
+            $browser->visit('/alumnos/' . $student->id . '/edit')
+                ->assertSee('Editar alumno')
+                ->type('@student-name', 'Jhon Doe')
+                ->type('@student-email', 'jhondoe@school.com')
+                ->click('@update-student')
+                ->assertPathIs('/alumnos/' . $student->id)
+                ->assertSee('Se ha actualizado los datos de un alumno');
+        });
 
+        $this->assertDatabaseHas('students', ['names' => 'Jhon Doe', 'email' => 'jhondoe@school.com']);
     }
 
     public function delete_student()

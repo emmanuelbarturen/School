@@ -27,7 +27,7 @@ class StudentRequest extends FormRequest
     {
         return [
             'names' => 'required|max:50',
-            'email' => 'required|max:255|unique:students,email',
+            'email' => 'required|max:255|unique:students,email,' . $this->route('alumno', 0),
         ];
     }
 }
