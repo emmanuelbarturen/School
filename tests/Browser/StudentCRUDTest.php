@@ -29,7 +29,7 @@ class StudentCRUDTest extends DuskTestCase
                 ->type('@student-email', 'juan@school.com')
                 ->click('@save-student')
                 ->assertPathIs('/alumnos')
-                ->assertSee('Se ha guardado a un nuevo alumno');
+                ->assertSee('El Registro ha sido guardado');
         });
         $this->assertDatabaseHas('students', ['names' => 'Juan', 'email' => 'juan@school.com']);
     }
@@ -60,15 +60,29 @@ class StudentCRUDTest extends DuskTestCase
                 ->type('@student-email', 'jhondoe@school.com')
                 ->click('@update-student')
                 ->assertPathIs('/alumnos/' . $student->id)
-                ->assertSee('Se ha actualizado los datos de un alumno');
+                ->assertSee('Actualizado correctamente');
         });
 
         $this->assertDatabaseHas('students', ['names' => 'Jhon Doe', 'email' => 'jhondoe@school.com']);
     }
 
+    /**
+     * @test
+     * @throws \Throwable
+     */
     public function delete_student()
     {
+        $student = factory(Student::class)->create();
+        $this->browse(function (Browser $browser) use ($student) {
+            $browser->visit('/alumnos/' . $student->id)
+                ->assertSee('Detalle del Alumno')
+                ->click('@delete-student')
+                ->driver->switchTo()->alert()->accept();
+            $browser->assertPathIs('/alumnos')
+                ->assertSee('Se ha eliminado el registro');
+        });
 
+        $this->assertDatabaseMissing('students', ['names' => $student->names, 'email' => $student->email]);
     }
 
 

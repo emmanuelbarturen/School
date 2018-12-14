@@ -12,7 +12,7 @@
                                       onsubmit="return confirm('Seguro que desea eliminar a este estudiante?')">
                                     {{ method_field('DELETE') }}
                                     @csrf
-                                    <button type="submit" class="btn btn-danger float-right">Eliminar</button>
+                                    <button type="submit" class="btn btn-danger float-right" dusk="delete-student">Eliminar</button>
                                 </form>
                             </div>
                         </div>

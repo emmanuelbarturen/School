@@ -40,9 +40,9 @@ class StudentsController extends Controller
     {
         $student = Student::create($request->except(['_token', '_method']));
         if ($student) {
-            flash('Se ha guardado a un nuevo alumno')->success();
+            flash(trans('flash.stored_success'))->success();
         } else {
-            flash('No se ha podido guardar al alumno')->error();
+            flash(trans('flash.stored_fail'))->error();
         }
         return redirect()->to('/alumnos');
     }
@@ -88,12 +88,15 @@ class StudentsController extends Controller
     public function update(StudentRequest $request, $id)
     {
         $student = Student::find($id);
+        if (!$student) {
+            abort(404);
+        }
         $student->fill($request->except(['_token', '_method']));
         $updated = $student->save();
         if ($updated) {
-            flash('Se ha actualizado los datos de un alumno')->success();
+            flash(trans('flash.updated_success'))->success();
         } else {
-            flash('No se ha podido actualizar los datos del alumno')->error();
+            flash(trans('flash.updated_fail'))->error();
         }
 
         return redirect()->route('alumnos.show', $student);
@@ -107,6 +110,17 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $student = Student::find($id);
+        if (!$student) {
+            abort(404);
+        }
+        $deleted = $student->delete();
+        if ($deleted) {
+            flash(trans('flash.delete_success'))->success();
+        } else {
+            flash(trans('flash.delete_fail'))->error();
+        }
+
+        return redirect()->route('alumnos.index');
     }
 }

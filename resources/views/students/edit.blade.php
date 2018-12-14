@@ -15,7 +15,6 @@
                                 <a href="{{ url('alumnos') }}" class="btn btn-secondary">Volver</a>
                             </div><!-- /form-group -->
                         </form>
-
                     </div>
                 </div>
             </div>
