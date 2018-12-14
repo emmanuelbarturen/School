@@ -56,7 +56,12 @@ class TeachersController extends Controller
      */
     public function show($id)
     {
-        //
+        $teacher = Teacher::find($id);
+        if (!$teacher) {
+            abort(404);
+        }
+
+        return view('teachers.show', compact('teacher'));
     }
 
     /**
@@ -67,19 +72,35 @@ class TeachersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $teacher = Teacher::find($id);
+        if (!$teacher) {
+            abort(404);
+        }
+        return view('teachers.edit', compact('teacher'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param TeacherRequest $request
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(TeacherRequest $request, $id)
     {
-        //
+        $teacher = Teacher::find($id);
+        if (!$teacher) {
+            abort(404);
+        }
+        $teacher->fill($request->except(['_token', '_method']));
+        $updated = $teacher->save();
+        if ($updated) {
+            flash(trans('flash.updated_success'))->success();
+        } else {
+            flash(trans('flash.updated_fail'))->error();
+        }
+
+        return redirect()->route('profesores.show', $teacher);
     }
 
     /**
@@ -90,6 +111,17 @@ class TeachersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $teacher = Teacher::find($id);
+        if (!$teacher) {
+            abort(404);
+        }
+        $deleted = $teacher->delete();
+        if ($deleted) {
+            flash(trans('flash.delete_success'))->success();
+        } else {
+            flash(trans('flash.delete_fail'))->error();
+        }
+
+        return redirect()->route('profesores.index');
     }
 }
