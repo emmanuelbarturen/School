@@ -1,5 +1,6 @@
 <?php namespace Tests\Browser;
 
+use App\Course;
 use App\Student;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
@@ -14,7 +15,6 @@ class StudentCRUDTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
      *
      * @test
      * @return void
@@ -32,6 +32,32 @@ class StudentCRUDTest extends DuskTestCase
                 ->assertSee('El Registro ha sido guardado');
         });
         $this->assertDatabaseHas('students', ['names' => 'Juan', 'email' => 'juan@school.com']);
+    }
+
+    /**
+     *
+     * @test
+     * @return void
+     * @throws \Throwable
+     */
+    public function create_student_with_courses()
+    {
+        $courses = factory(Course::class, 10)->create();
+        $this->browse(function (Browser $browser) use ($courses) {
+            $browser->visit('/alumnos/create')
+                ->assertSee('Crear nuevo alumno')
+                ->type('@student-name', 'Jazmin')
+                ->type('@student-email', 'jazz@school.com');
+            foreach ($courses->take(5) as $course) {
+                $browser->check('@c-' . $course->id);
+            }
+
+            $browser->click('@save-student')
+                ->assertPathIs('/alumnos')
+                ->assertSee('El Registro ha sido guardado');
+        });
+
+        $this->assertDatabaseHas('students', ['names' => 'Jazmin', 'email' => 'jazz@school.com']);
     }
 
     /**

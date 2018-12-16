@@ -1,5 +1,6 @@
 <?php namespace Tests\Browser;
 
+use App\Course;
 use App\Teacher;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
@@ -31,6 +32,30 @@ class TeachersCRUDTest extends DuskTestCase
                 ->assertSee('El Registro ha sido guardado');
         });
         $this->assertDatabaseHas('teachers', ['names' => 'Elon', 'phone' => '942424244']);
+    }
+
+    /**
+     * @test
+     * @throws \Throwable
+     */
+    public function create_teacher_with_courses()
+    {
+        $courses = factory(Course::class, 10)->create();
+        $this->browse(function (Browser $browser) use ($courses) {
+            $browser->visit('/profesores/create')
+                ->assertSee('Agregar nuevo profesor')
+                ->type('@teacher-name', 'Joseph')
+                ->type('@teacher-phone', '99999999');
+            foreach ($courses->take(5) as $course) {
+                $browser->check('@c-' . $course->id);
+            }
+
+            $browser->click('@save-teacher')
+                ->assertPathIs('/profesores')
+                ->assertSee('El Registro ha sido guardado');
+        });
+
+        $this->assertDatabaseHas('teachers', ['names' => 'Joseph', 'phone' => '99999999']);
     }
 
     /**

@@ -1,7 +1,9 @@
 <?php namespace App\Http\Controllers;
 
+use App\Course;
 use App\Http\Requests\StudentRequest;
 use App\Student;
+use Exception;
 
 /**
  * Class StudentsController
@@ -27,7 +29,8 @@ class StudentsController extends Controller
      */
     public function create()
     {
-        return view('students.create');
+        $courses = Course::all();
+        return view('students.create', compact('courses'));
     }
 
     /**
@@ -38,12 +41,21 @@ class StudentsController extends Controller
      */
     public function store(StudentRequest $request)
     {
-        $student = Student::create($request->except(['_token', '_method']));
-        if ($student) {
-            flash(trans('flash.stored_success'))->success();
-        } else {
-            flash(trans('flash.stored_fail'))->error();
+        try {
+            $student = Student::create($request->except(['_token', '_method']));
+            if ($courses = $request->get('courses')) {
+                $student->courses()->attach($courses);
+            }
+            if ($student) {
+                flash(trans('flash.stored_success'))->success();
+            } else {
+                flash(trans('flash.stored_fail'))->error();
+            }
+
+        } catch (Exception $e) {
+            flash(trans('flash.exception'))->error();
         }
+
         return redirect()->to('/alumnos');
     }
 

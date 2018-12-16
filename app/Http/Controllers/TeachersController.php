@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Course;
 use App\Http\Requests\TeacherRequest;
 use App\Teacher;
 use Illuminate\Http\Request;
@@ -28,7 +29,8 @@ class TeachersController extends Controller
      */
     public function create()
     {
-        return view('teachers.create');
+        $courses = Course::all();
+        return view('teachers.create', compact('courses'));
     }
 
     /**
@@ -41,6 +43,9 @@ class TeachersController extends Controller
     {
         $teacher = Teacher::create($request->except(['_token', '_method']));
         if ($teacher) {
+            if ($courses = $request->get('courses')) {
+                $teacher->courses()->attach($courses);
+            }
             flash(trans('flash.stored_success'))->success();
         } else {
             flash(trans('flash.stored_fail'))->error();
