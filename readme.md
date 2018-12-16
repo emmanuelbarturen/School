@@ -1,5 +1,5 @@
 <h1> School </h1>
-[![Build Status](https://travis-ci.org/emmanuelbarturen/School.svg?branch=master)](https://travis-ci.org/emmanuelbarturen/School)
+<img src="https://travis-ci.org/emmanuelbarturen/School.svg?branch=master">
 Crear un módulo CRUD de alumno
 Crear un módulo CRUD de profesor
 Crear un módulo de Cursos
